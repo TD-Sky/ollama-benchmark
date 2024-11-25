@@ -1,0 +1,13 @@
+[package]
+name = "ollama"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+reqwest = { workspace = true, features = ["json", "stream"] }
+url = { workspace = true }
+chrono = { workspace = true, features = ["serde"] }
+smol_str = { workspace = true, features = ["serde"] }
+futures-util = { workspace = true }
