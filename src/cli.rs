@@ -6,15 +6,11 @@ pub struct Cli {
     #[arg(long, short)]
     pub model: String,
 
-    #[arg(short, default_value_t = 5)]
-    pub n: usize,
-
-    #[arg(short)]
-    pub prompt: String,
-
     #[arg(long)]
     pub url: Option<Url>,
 
     #[arg(long)]
     pub batch: Option<usize>,
+
+    pub prompts: Vec<String>,
 }

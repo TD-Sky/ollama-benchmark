@@ -19,10 +19,10 @@ async fn main() -> anyhow::Result<()> {
 
     let mut queue = FuturesUnordered::new();
 
-    for _ in 0..cli.n {
+    for prompt in &cli.prompts {
         let req = StreamRequest::builder()
             .model(&cli.model)
-            .prompt(&cli.prompt)
+            .prompt(prompt)
             .maybe_options(opts.as_ref())
             .build();
 
