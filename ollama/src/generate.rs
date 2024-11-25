@@ -2,10 +2,10 @@
 
 use std::time::Duration;
 
+use bon::Builder;
 use chrono::{DateTime, Utc};
 use futures_util::{Stream, StreamExt};
-use serde::{Deserialize, Deserializer};
-use serde_json::json;
+use serde::{Deserialize, Deserializer, Serialize};
 use smol_str::SmolStr;
 
 use crate::{Ollama, Result};
@@ -13,17 +13,13 @@ use crate::{Ollama, Result};
 impl Ollama {
     pub async fn generate_stream(
         &self,
-        model: &str,
-        prompt: &str,
+        req: StreamRequest<'_>,
     ) -> Result<impl Stream<Item = Result<StreamChunk>>> {
         let url = self.base_url.join("api/generate").unwrap();
         let stream = self
             .client
             .post(url)
-            .json(&json!({
-                "model": model,
-                "prompt": prompt,
-            }))
+            .json(&req)
             .send()
             .await?
             .bytes_stream()
@@ -35,6 +31,11 @@ impl Ollama {
 
         Ok(stream)
     }
+}
+
+#[derive(Debug, Serialize)]
+pub struct GenerateOptions {
+    pub num_batch: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -67,4 +68,11 @@ where
 {
     let nanos = u64::deserialize(deserializer)?;
     Ok(Duration::from_nanos(nanos))
+}
+
+#[derive(Debug, Serialize, Builder)]
+pub struct StreamRequest<'a> {
+    model: &'a str,
+    prompt: &'a str,
+    options: Option<&'a GenerateOptions>,
 }

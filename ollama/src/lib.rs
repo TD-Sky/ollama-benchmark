@@ -5,6 +5,8 @@ use std::sync::Arc;
 
 pub use error::{Error, Result};
 
+pub use generate::*;
+
 use reqwest::Client;
 use url::Url;
 

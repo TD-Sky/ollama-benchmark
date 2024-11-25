@@ -14,4 +14,7 @@ pub struct Cli {
 
     #[arg(long)]
     pub url: Option<Url>,
+
+    #[arg(long)]
+    pub batch: Option<usize>,
 }

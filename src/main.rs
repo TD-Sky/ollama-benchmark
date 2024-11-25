@@ -4,12 +4,13 @@ use clap::Parser;
 use cli::Cli;
 use futures_util::{stream::FuturesUnordered, StreamExt};
 use indoc::printdoc;
-use ollama::Ollama;
+use ollama::{GenerateOptions, Ollama, StreamRequest};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let mut cli = Cli::parse();
 
+    let opts = cli.batch.map(|num_batch| GenerateOptions { num_batch });
     let ollama = cli
         .url
         .take()
@@ -19,8 +20,14 @@ async fn main() -> anyhow::Result<()> {
     let mut queue = FuturesUnordered::new();
 
     for _ in 0..cli.n {
+        let req = StreamRequest::builder()
+            .model(&cli.model)
+            .prompt(&cli.prompt)
+            .maybe_options(opts.as_ref())
+            .build();
+
         queue.push(async {
-            let mut stream = ollama.generate_stream(&cli.model, &cli.prompt).await?;
+            let mut stream = ollama.generate_stream(req).await?;
 
             let mut stats = None;
 

@@ -11,3 +11,4 @@ url = { workspace = true }
 chrono = { workspace = true, features = ["serde"] }
 smol_str = { workspace = true, features = ["serde"] }
 futures-util = { workspace = true }
+bon = { workspace = true }
