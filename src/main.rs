@@ -3,6 +3,7 @@ mod cli;
 use clap::Parser;
 use cli::Cli;
 use futures_util::{stream::FuturesUnordered, StreamExt};
+use indoc::printdoc;
 use ollama::Ollama;
 
 #[tokio::main]
@@ -34,8 +35,22 @@ async fn main() -> anyhow::Result<()> {
 
     while let Some(stats) = queue.next().await {
         let stats = stats?;
-        let speed = stats.eval_count as f64 / stats.eval_duration.as_secs_f64();
-        println!("evaluation speed: {speed} t/s");
+
+        let load_time = stats.load_duration.as_secs_f64();
+        let load_speed = stats.prompt_eval_count as f64 / load_time;
+        let eval_time = stats.eval_duration.as_secs_f64();
+        let eval_speed = stats.eval_count as f64 / eval_time;
+
+        printdoc! {"
+            [benchmark for `{}`]
+            prompt load time: {load_time}s
+            prompt load speed: {load_speed} t/s
+            evaluation time: {eval_time}s
+            evaluation speed: {eval_speed} t/s
+
+            ",
+            cli.model
+        };
     }
 
     Ok(())
