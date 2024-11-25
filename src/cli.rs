@@ -1,4 +1,5 @@
 use clap::Parser;
+use url::Url;
 
 #[derive(Debug, Parser)]
 pub struct Cli {
@@ -10,4 +11,7 @@ pub struct Cli {
 
     #[arg(short)]
     pub prompt: String,
+
+    #[arg(long)]
+    pub url: Option<Url>,
 }

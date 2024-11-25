@@ -7,9 +7,13 @@ use ollama::Ollama;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let cli = Cli::parse();
+    let mut cli = Cli::parse();
 
-    let ollama = Ollama::default();
+    let ollama = cli
+        .url
+        .take()
+        .map(Ollama::new)
+        .unwrap_or_else(Ollama::default);
 
     let mut queue = FuturesUnordered::new();
 

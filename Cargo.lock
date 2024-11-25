@@ -723,6 +723,7 @@ dependencies = [
  "futures-util",
  "ollama",
  "tokio",
+ "url",
 ]
 
 [[package]]
