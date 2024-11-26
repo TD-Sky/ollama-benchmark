@@ -43,15 +43,15 @@ async fn main() -> anyhow::Result<()> {
     while let Some(stats) = queue.next().await {
         let stats = stats?;
 
-        let load_time = stats.load_duration.as_secs_f64();
-        let load_speed = stats.prompt_eval_count as f64 / load_time;
+        let peval_time = stats.prompt_eval_duration.as_secs_f64();
+        let peval_speed = stats.prompt_eval_count as f64 / peval_time;
         let eval_time = stats.eval_duration.as_secs_f64();
         let eval_speed = stats.eval_count as f64 / eval_time;
 
         printdoc! {"
             [benchmark for `{}`]
-            prompt load time: {load_time}s
-            prompt load speed: {load_speed} t/s
+            prompt evaluation time: {peval_time}s
+            prompt evaluaeval speed: {peval_speed} t/s
             evaluation time: {eval_time}s
             evaluation speed: {eval_speed} t/s
 
