@@ -33,9 +33,10 @@ impl Ollama {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Builder)]
 pub struct GenerateOptions {
-    pub num_batch: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub num_gpu: Option<usize>,
 }
 
 #[derive(Debug, Deserialize)]

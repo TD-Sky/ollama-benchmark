@@ -10,7 +10,7 @@ pub struct Cli {
     pub url: Option<Url>,
 
     #[arg(long)]
-    pub batch: Option<usize>,
+    pub gpus: Option<usize>,
 
     pub prompts: Vec<String>,
 }

@@ -10,7 +10,7 @@ use ollama::{GenerateOptions, Ollama, StreamRequest};
 async fn main() -> anyhow::Result<()> {
     let mut cli = Cli::parse();
 
-    let opts = cli.batch.map(|num_batch| GenerateOptions { num_batch });
+    let opts = GenerateOptions::builder().maybe_num_gpu(cli.gpus).build();
     let ollama = cli
         .url
         .take()
@@ -23,7 +23,7 @@ async fn main() -> anyhow::Result<()> {
         let req = StreamRequest::builder()
             .model(&cli.model)
             .prompt(prompt)
-            .maybe_options(opts.as_ref())
+            .options(&opts)
             .build();
 
         queue.push(async {
